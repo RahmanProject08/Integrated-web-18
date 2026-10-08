@@ -1,0 +1,59 @@
+name: Test Webhook & Telegram Notification
+
+on:
+  workflow_dispatch:
+    inputs:
+      status_kejadian:
+        description: 'Status Kejadian (AMAN / BAHAYA)'
+        required: true
+        default: 'BAHAYA'
+      threat_level:
+        description: 'Level Ancaman (LOW / MEDIUM / HIGH / CRITICAL)'
+        required: true
+        default: 'HIGH'
+      detail_pesan:
+        description: 'Detail Pesan Ancaman'
+        required: true
+        default: 'Uji Coba Integrasi: Terdeteksi anomali trafik mencurigakan pada database'
+
+jobs:
+  test-telegram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kirim Pesan Uji Coba ke Telegram
+        run: |
+          STATUS="${{ github.event.inputs.status_kejadian || 'BAHAYA' }}"
+          LEVEL="${{ github.event.inputs.threat_level || 'HIGH' }}"
+          DETAIL="${{ github.event.inputs.detail_pesan || 'Uji Coba Integrasi: Terdeteksi anomali trafik mencurigakan pada database' }}"
+          
+          ICON="🚨"
+          if [ "$STATUS" = "AMAN" ]; then
+            ICON="✅"
+          fi
+
+          TEXT=$(cat <<EOF
+$ICON *NOTIFIKASI WEBHOOK SUPABASE*
+━━━━━━━━━━━━━━━━━━━━
+📌 *Status Kejadian* : *$STATUS*
+⚠️ *Level Ancaman*   : *$LEVEL*
+📝 *Detail Pesan*    : $DETAIL
+🕒 *Waktu*           : $(date -u) UTC
+━━━━━━━━━━━━━━━━━━━━
+🧪 *Uji Koneksi*    : Berhasil dikirim via GitHub Secrets & Telegram Bot API
+EOF
+          )
+
+          echo "Mengirim notifikasi ke Telegram..."
+          RESPONSE=$(curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\": \"${{ secrets.TELEGRAM_CHAT_ID }}\", \"text\": $(echo "$TEXT" | jq -Rs .), \"parse_mode\": \"Markdown\"}")
+
+          echo "Respons dari Telegram:"
+          echo "$RESPONSE"
+
+          OK=$(echo "$RESPONSE" | jq -r '.ok')
+          if [ "$OK" != "true" ]; then
+            echo "::error::Gagal mengirim pesan ke Telegram: $RESPONSE"
+            exit 1
+          fi
+          echo "Pesan berhasil terkirim ke Telegram!"
