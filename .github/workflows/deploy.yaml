@@ -41,7 +41,11 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          DEPLOYMENT_URL=$(vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }})
+          DEPLOYMENT_URL=$(vercel deploy --prod --yes \
+            --token=${{ secrets.VERCEL_TOKEN }} \
+            --env TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
+            --env TELEGRAM_CHAT_ID="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --env HMAC_SECRET="${{ secrets.HMAC_SECRET }}")
           echo "DEPLOY_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           echo "Deployment berhasil ke: $DEPLOYMENT_URL"
 
