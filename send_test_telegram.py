@@ -21,8 +21,7 @@ def main():
         f"📌 *Status Kejadian* : *{status.upper()}*\n"
         f"⚠️ *Level Ancaman*   : *{level.upper()}*\n"
         f"📝 *Detail Pesan*    : {detail}\n"
-        f"━━━━━━━━━━━━━━━━━━━━\n"
-        f"🧪 *Uji Koneksi Telegram Berhasil*"
+        f"━━━━━━━━━━━━━━━━━━━━"
     )
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
