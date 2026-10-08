@@ -41,6 +41,11 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
+          echo "Menyinkronkan Secrets ke Vercel Environment..."
+          echo "${{ secrets.TELEGRAM_BOT_TOKEN }}" | vercel env add TELEGRAM_BOT_TOKEN production --force --token=${{ secrets.VERCEL_TOKEN }} || true
+          echo "${{ secrets.TELEGRAM_CHAT_ID }}" | vercel env add TELEGRAM_CHAT_ID production --force --token=${{ secrets.VERCEL_TOKEN }} || true
+          echo "${{ secrets.HMAC_SECRET }}" | vercel env add HMAC_SECRET production --force --token=${{ secrets.VERCEL_TOKEN }} || true
+
           DEPLOYMENT_URL=$(vercel deploy --prod --yes \
             --token=${{ secrets.VERCEL_TOKEN }} \
             --env TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
