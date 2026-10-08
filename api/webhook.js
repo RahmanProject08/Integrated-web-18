@@ -46,28 +46,59 @@ export default async function handler(req, res) {
       });
     }
 
-    // Jika cocok, lanjutkan ke pengiriman Telegram (atau proses event berikutnya)
-    const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
-    const telegramChatId = process.env.TELEGRAM_CHAT_ID;
-    let telegramStatus = 'Skipped (credentials not configured)';
+    // [8.3] Integrasi Telegram Bot Alert
+    // Ambil kredensial dari environment variables (tidak di-hardcode)
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    if (telegramBotToken && telegramChatId) {
+    // Parsing data payload dari Supabase (record atau body langsung)
+    const payload = typeof req.body === 'object' && req.body !== null ? req.body : {};
+    const record = payload.record || payload.data || payload;
+
+    // Ekstraksi status kejadian (AMAN / BAHAYA), level ancaman, dan detail pesan
+    const statusKejadian = record.status || payload.status || (record.is_danger ? 'BAHAYA' : 'AMAN');
+    const levelAncaman = record.threat_level || record.level || payload.level || 'MEDIUM';
+    const detailPesan = record.message || record.detail || record.description || payload.message || 'Laporan terdeteksi dari database Supabase';
+
+    // Susun format pesan Telegram
+    const statusIcon = statusKejadian.toUpperCase() === 'BAHAYA' ? '🚨' : '✅';
+    const telegramMessage = [
+      `${statusIcon} *NOTIFIKASI WEBHOOK SUPABASE*`,
+      `━━━━━━━━━━━━━━━━━━━━`,
+      `📌 *Status Kejadian* : *${statusKejadian.toUpperCase()}*`,
+      `⚠️ *Level Ancaman*   : *${levelAncaman.toUpperCase()}*`,
+      `📝 *Detail Pesan*    : ${detailPesan}`,
+      `🕒 *Waktu*           : ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`,
+      `━━━━━━━━━━━━━━━━━━━━`,
+      `📄 *Payload Lengkap*:`,
+      `\`\`\`json`,
+      rawBody.length > 500 ? rawBody.substring(0, 500) + '...' : rawBody,
+      `\`\`\``,
+    ].join('\n');
+
+    let telegramResult = { status: 'skipped', message: 'TELEGRAM_BOT_TOKEN atau TELEGRAM_CHAT_ID belum diset.' };
+
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
       try {
-        const messageText = `🚨 *Laporan Webhook Diterima*\n\nData:\n\`\`\`json\n${rawBody}\n\`\`\``;
-        const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
-
-        await fetch(telegramUrl, {
+        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        const tgResponse = await fetch(telegramUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            chat_id: telegramChatId,
-            text: messageText,
+            chat_id: TELEGRAM_CHAT_ID,
+            text: telegramMessage,
             parse_mode: 'Markdown',
           }),
         });
-        telegramStatus = 'Sent';
+
+        const tgData = await tgResponse.json();
+        if (tgData.ok) {
+          telegramResult = { status: 'sent', message_id: tgData.result.message_id };
+        } else {
+          telegramResult = { status: 'failed', error: tgData.description };
+        }
       } catch (tgError) {
-        telegramStatus = `Failed: ${tgError.message}`;
+        telegramResult = { status: 'error', error: tgError.message };
       }
     }
 
