@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     const levelAncaman = record.threat_level || record.level || payload.level || 'MEDIUM';
     const detailPesan = record.message || record.detail || record.description || payload.message || 'Laporan terdeteksi dari database Supabase';
 
-    // Susun format pesan Telegram
+    // Susun format pesan Telegram (ringkas dan bersih tanpa payload mentah)
     const statusIcon = statusKejadian.toUpperCase() === 'BAHAYA' ? '🚨' : '✅';
     const telegramMessage = [
       `${statusIcon} *NOTIFIKASI WEBHOOK SUPABASE*`,
@@ -70,10 +70,6 @@ export default async function handler(req, res) {
       `📝 *Detail Pesan*    : ${detailPesan}`,
       `🕒 *Waktu*           : ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`,
       `━━━━━━━━━━━━━━━━━━━━`,
-      `📄 *Payload Lengkap*:`,
-      `\`\`\`json`,
-      rawBody.length > 500 ? rawBody.substring(0, 500) + '...' : rawBody,
-      `\`\`\``,
     ].join('\n');
 
     let telegramResult = { status: 'skipped', message: 'TELEGRAM_BOT_TOKEN atau TELEGRAM_CHAT_ID belum diset.' };
