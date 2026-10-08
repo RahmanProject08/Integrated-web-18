@@ -1,0 +1,8 @@
+{
+  "name": "integrated-web-18",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Webhook receiver and asynchronous AI processor on Vercel",
+  "main": "api/webhook.js",
+  "dependencies": {}
+}
