@@ -60,13 +60,17 @@ async def main():
     print()
 
     # 4. Kesimpulan Pembuktian
+    total_script_duration = time.time() - script_start_time
     print("=" * 65)
-    print(" KESIMPULAN PEMBUKTIAN:")
-    print(f" - Eksekusi Sekuensial: {seq_time:.4f} detik (penjumlahan waktu)")
-    print(f" - Eksekusi Konkuren  : {conc_time:.4f} detik (waktu model terlama / max)")
-    print(f" - Efisiensi Waktu    : Menghemat {(seq_time - conc_time):.4f} detik (~{((seq_time - conc_time) / seq_time) * 100:.1f}%)")
+    print(" KESIMPULAN PEMBUKTIAN & WAKTU EKSEKUSI AKHIR:")
+    print(f" - Eksekusi Sekuensial      : {seq_time:.4f} detik (penjumlahan waktu)")
+    print(f" - Eksekusi Konkuren        : {conc_time:.4f} detik (waktu model terlama / max)")
+    print(f" - Efisiensi Waktu          : Menghemat {(seq_time - conc_time):.4f} detik (~{((seq_time - conc_time) / seq_time) * 100:.1f}%)")
+    print(f" - Waktu Eksekusi Akhir     : {total_script_duration:.4f} detik")
+    print(f" - Waktu Selesai (Timestamp): {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 65)
 
 
 if __name__ == "__main__":
+    script_start_time = time.time()
     asyncio.run(main())
