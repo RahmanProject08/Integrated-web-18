@@ -1,30 +1,35 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Security Operations Center & AI Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
   <style>
     :root {
-      --bg: #07090e;
-      --card-bg: rgba(18, 24, 38, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(255, 255, 255, 0.12);
-      --text: #f3f4f6;
-      --text-muted: #94a3b8;
-      
-      --color-safe-bg: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), rgba(6, 78, 59, 0.25));
-      --color-safe-border: rgba(16, 185, 129, 0.4);
-      --color-safe-glow: 0 0 30px rgba(16, 185, 129, 0.2);
-      --color-safe-badge: #10b981;
-      
-      --color-danger-bg: radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.2), rgba(127, 29, 29, 0.3));
-      --color-danger-border: rgba(239, 68, 68, 0.5);
-      --color-danger-glow: 0 0 35px rgba(239, 68, 68, 0.25);
-      --color-danger-badge: #ef4444;
+      --bg: #030509;
+      --card-bg: rgba(8, 11, 19, 0.85);
+      --card-border: rgba(255, 255, 255, 0.06);
+      --card-hover: rgba(255, 255, 255, 0.10);
+      --text: #f9fafb;
+      --text-muted: #8391a7;
+
+      /* SAFE: hijau-teal dingin, terang di atas latar gelap */
+      --color-safe-bg: radial-gradient(circle at 50% 0%, rgba(34, 255, 170, 0.18), rgba(2, 36, 28, 0.55));
+      --color-safe-border: rgba(52, 255, 180, 0.55);
+      --color-safe-glow: 0 0 32px rgba(34, 255, 170, 0.28);
+      --color-safe-badge: #22ffaa;
+
+      /* DANGER: merah panas, jenuh, mengarah ke magenta */
+      --color-danger-bg: radial-gradient(circle at 50% 0%, rgba(255, 40, 70, 0.28), rgba(60, 4, 14, 0.65));
+      --color-danger-border: rgba(255, 60, 90, 0.75);
+      --color-danger-glow: 0 0 38px rgba(255, 40, 70, 0.40);
+      --color-danger-badge: #ff3355;
 
       --primary: #3b82f6;
       --primary-hover: #2563eb;
@@ -248,7 +253,9 @@
       gap: 16px;
     }
 
-    select, input[type="text"], textarea {
+    select,
+    input[type="text"],
+    textarea {
       width: 100%;
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--card-border);
@@ -260,7 +267,9 @@
       transition: all 0.2s ease;
     }
 
-    select:focus, input[type="text"]:focus, textarea:focus {
+    select:focus,
+    input[type="text"]:focus,
+    textarea:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
     }
@@ -360,8 +369,13 @@
       letter-spacing: 0.02em;
     }
 
-    .pred-aman .ai-model-badge { color: #34d399; }
-    .pred-bahaya .ai-model-badge { color: #f87171; }
+    .pred-aman .ai-model-badge {
+      color: #34d399;
+    }
+
+    .pred-bahaya .ai-model-badge {
+      color: #f87171;
+    }
 
     .ai-model-conf {
       font-size: 0.82rem;
@@ -409,9 +423,18 @@
       height: 10px;
       border-radius: 50%;
     }
-    .dot-red { background: #ef4444; }
-    .dot-yellow { background: #f59e0b; }
-    .dot-green { background: #10b981; }
+
+    .dot-red {
+      background: #ef4444;
+    }
+
+    .dot-yellow {
+      background: #f59e0b;
+    }
+
+    .dot-green {
+      background: #10b981;
+    }
 
     .console-output {
       font-family: 'JetBrains Mono', monospace;
@@ -436,12 +459,24 @@
       flex-shrink: 0;
     }
 
-    .log-type-INFO { color: #38bdf8; }
-    .log-type-SUCCESS { color: #4ade80; }
-    .log-type-WARN { color: #fbbf24; }
-    .log-type-DANGER { color: #f87171; }
+    .log-type-INFO {
+      color: #38bdf8;
+    }
+
+    .log-type-SUCCESS {
+      color: #4ade80;
+    }
+
+    .log-type-WARN {
+      color: #fbbf24;
+    }
+
+    .log-type-DANGER {
+      color: #f87171;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <!-- Header -->
@@ -450,11 +485,13 @@
         <div class="brand-icon">🛡️</div>
         <div>
           <h1>Security Operations & AI System</h1>
-          <p style="color: var(--text-muted); font-size: 0.88rem;">Integrated Web Engine — Muhammad Irsyaad Nurrahman</p>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">Integrated Web Engine — Muhammad Irsyaad Nurrahman
+          </p>
         </div>
       </div>
       <div class="env-badge">
-        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span>
+        <span
+          style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span>
         Vercel Serverless & GitHub CI/CD Active
       </div>
     </header>
@@ -469,7 +506,8 @@
         </div>
       </div>
       <div id="securityTitle" class="metric-title">SYSTEM SECURED</div>
-      <div id="securityDesc" class="metric-desc">Semua parameter operasional dalam batas normal. Tidak terdeteksi indikasi anomali aktif.</div>
+      <div id="securityDesc" class="metric-desc">Semua parameter operasional dalam batas normal. Tidak terdeteksi
+        indikasi anomali aktif.</div>
     </div>
 
     <!-- Main Grid -->
@@ -478,7 +516,7 @@
       <section class="glass-panel">
         <div class="panel-header">
           <span class="panel-icon">⚡</span>
-          <h2>Webhook HMAC-SHA256 Simulator</h2>
+          <h2>Ujian Siber Alert Simulator</h2>
         </div>
 
         <form id="webhookForm" onsubmit="event.preventDefault(); simulateWebhook();">
@@ -508,7 +546,8 @@
 
           <div class="form-group">
             <label for="wbSecret">(d) Kunci Rahasia HMAC (HMAC_SECRET)</label>
-            <input type="text" id="wbSecret" value="secret_key_demo" placeholder="Masukkan HMAC Secret yang sama dengan server">
+            <input type="text" id="wbSecret" value="secret_key_demo"
+              placeholder="Masukkan HMAC Secret yang sama dengan server">
           </div>
 
           <label class="checkbox-group">
@@ -531,7 +570,8 @@
 
         <div class="form-group">
           <label for="aiInputText">Parameter Input Data Teks</label>
-          <input type="text" id="aiInputText" value="deteksi intrusi ancaman serangan malware berbahaya" placeholder="Masukkan teks untuk dianalisis model">
+          <input type="text" id="aiInputText" value="deteksi intrusi ancaman serangan malware berbahaya"
+            placeholder="Masukkan teks untuk dianalisis model">
         </div>
 
         <button type="button" id="btnRunAi" onclick="runAiBenchmark()">
@@ -540,7 +580,8 @@
 
         <div class="ai-stats-pill">
           <span style="color: var(--text-muted);">Total Waktu Eksekusi:</span>
-          <strong id="aiDurationDisplay" style="font-family: 'JetBrains Mono', monospace; color: #38bdf8;">0.0000 detik</strong>
+          <strong id="aiDurationDisplay" style="font-family: 'JetBrains Mono', monospace; color: #38bdf8;">0.0000
+            detik</strong>
         </div>
 
         <!-- Kartu Prediksi Model -->
@@ -567,8 +608,10 @@
           <div class="dot dot-yellow"></div>
           <div class="dot dot-green"></div>
         </div>
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #64748b;">TERMINAL EVENT LOG</span>
-        <button onclick="clearLogs()" style="background:none; border:none; color:#64748b; font-size:0.75rem; cursor:pointer; padding:0; box-shadow:none;">Clear</button>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #64748b;">TERMINAL EVENT
+          LOG</span>
+        <button onclick="clearLogs()"
+          style="background:none; border:none; color:#64748b; font-size:0.75rem; cursor:pointer; padding:0; box-shadow:none;">Clear</button>
       </div>
       <div id="consoleOutput" class="console-output">
         <!-- Log items akan disisipkan di sini -->
@@ -693,7 +736,16 @@
         const resData = await response.json();
 
         if (response.status === 200) {
-          addLog('SUCCESS', `HTTP 200 OK: Webhook berhasil diverifikasi! Telegram alert dipicu.`);
+          addLog('SUCCESS', `HTTP 200 OK: Validasi HMAC-SHA256 berhasil.`);
+          
+          if (resData.telegram && resData.telegram.status === 'sent') {
+            addLog('SUCCESS', `Telegram: Pesan berhasil dikirim ke bot (ID: ${resData.telegram.message_id})!`);
+          } else if (resData.telegram && resData.telegram.status === 'skipped') {
+            addLog('WARN', `Telegram: Pengiriman dilewati (${resData.telegram.message})`);
+          } else if (resData.telegram && resData.telegram.status === 'failed') {
+            addLog('DANGER', `Telegram: Gagal kirim bot (${resData.telegram.error})`);
+          }
+
           updateSecurityState(status === 'BAHAYA', `Laporan Webhook Diterima: ${message}`);
         } else if (response.status === 401) {
           addLog('DANGER', `HTTP 401 Unauthorized: Validasi HMAC gagal! ${resData.message}`);
@@ -765,4 +817,5 @@
     }
   </script>
 </body>
+
 </html>

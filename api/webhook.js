@@ -47,9 +47,9 @@ export default async function handler(req, res) {
     }
 
     // [8.3] Integrasi Telegram Bot Alert
-    // Ambil kredensial dari environment variables (tidak di-hardcode)
-    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+    // Ambil kredensial dari environment variables (atau header khusus pengujian simulator)
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || req.headers['x-telegram-token'];
+    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || req.headers['x-telegram-chat-id'];
 
     // Parsing data payload dari Supabase (record atau body langsung)
     const payload = typeof req.body === 'object' && req.body !== null ? req.body : {};
