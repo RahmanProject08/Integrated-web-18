@@ -738,8 +738,14 @@
         if (response.status === 200) {
           addLog('SUCCESS', `HTTP 200 OK: Validasi HMAC-SHA256 berhasil.`);
           
-          if (resData.telegram && resData.telegram.status === 'sent') {
-            addLog('SUCCESS', `Telegram: Pesan berhasil dikirim ke bot!`);
+          if (resData.telegram) {
+            if (resData.telegram.status === 'sent') {
+              addLog('SUCCESS', `Telegram: Pesan berhasil dikirim ke bot!`);
+            } else if (resData.telegram.status === 'skipped') {
+              addLog('INFO', `Telegram: Server belum mendeteksi TELEGRAM_BOT_TOKEN di environment Vercel.`);
+            } else if (resData.telegram.status === 'failed' || resData.telegram.status === 'error') {
+              addLog('DANGER', `Telegram API Error: ${resData.telegram.error || resData.telegram.message}`);
+            }
           }
 
           updateSecurityState(status === 'BAHAYA', `Laporan Webhook Diterima: ${message}`);
