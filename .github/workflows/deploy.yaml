@@ -40,17 +40,30 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          HMAC_SECRET: ${{ secrets.HMAC_SECRET }}
         run: |
-          echo "Menyinkronkan Secrets ke Vercel Environment..."
-          echo "${{ secrets.TELEGRAM_BOT_TOKEN }}" | vercel env add TELEGRAM_BOT_TOKEN production --force --token=${{ secrets.VERCEL_TOKEN }} || true
-          echo "${{ secrets.TELEGRAM_CHAT_ID }}" | vercel env add TELEGRAM_CHAT_ID production --force --token=${{ secrets.VERCEL_TOKEN }} || true
-          echo "${{ secrets.HMAC_SECRET }}" | vercel env add HMAC_SECRET production --force --token=${{ secrets.VERCEL_TOKEN }} || true
+          echo "Menyinkronkan Kredensial ke Vercel..."
+          # Pastikan variabel lingkungan tersimpan di project Vercel
+          printf "%s" "$TELEGRAM_BOT_TOKEN" | vercel env rm TELEGRAM_BOT_TOKEN production -y --token=${{ secrets.VERCEL_TOKEN }} || true
+          printf "%s" "$TELEGRAM_BOT_TOKEN" | vercel env add TELEGRAM_BOT_TOKEN production --token=${{ secrets.VERCEL_TOKEN }} || true
 
+          printf "%s" "$TELEGRAM_CHAT_ID" | vercel env rm TELEGRAM_CHAT_ID production -y --token=${{ secrets.VERCEL_TOKEN }} || true
+          printf "%s" "$TELEGRAM_CHAT_ID" | vercel env add TELEGRAM_CHAT_ID production --token=${{ secrets.VERCEL_TOKEN }} || true
+
+          printf "%s" "$HMAC_SECRET" | vercel env rm HMAC_SECRET production -y --token=${{ secrets.VERCEL_TOKEN }} || true
+          printf "%s" "$HMAC_SECRET" | vercel env add HMAC_SECRET production --token=${{ secrets.VERCEL_TOKEN }} || true
+
+          # Deploy dengan menyertakan build environment
           DEPLOYMENT_URL=$(vercel deploy --prod --yes \
             --token=${{ secrets.VERCEL_TOKEN }} \
-            --env TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
-            --env TELEGRAM_CHAT_ID="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            --env HMAC_SECRET="${{ secrets.HMAC_SECRET }}")
+            --build-env TELEGRAM_BOT_TOKEN="$TELEGRAM_BOT_TOKEN" \
+            --build-env TELEGRAM_CHAT_ID="$TELEGRAM_CHAT_ID" \
+            --build-env HMAC_SECRET="$HMAC_SECRET" \
+            --env TELEGRAM_BOT_TOKEN="$TELEGRAM_BOT_TOKEN" \
+            --env TELEGRAM_CHAT_ID="$TELEGRAM_CHAT_ID" \
+            --env HMAC_SECRET="$HMAC_SECRET")
           echo "DEPLOY_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           echo "Deployment berhasil ke: $DEPLOYMENT_URL"
 

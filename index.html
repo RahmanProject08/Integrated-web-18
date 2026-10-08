@@ -550,14 +550,9 @@
               placeholder="Masukkan HMAC Secret yang sama dengan server">
           </div>
 
-          <div class="form-group">
-            <label for="wbChatId">(e) Telegram Chat ID (Tujuan Notifikasi)</label>
-            <input type="text" id="wbChatId" value="" placeholder="Masukkan Telegram Chat ID Anda (contoh: 123456789)">
-          </div>
-
           <label class="checkbox-group">
             <input type="checkbox" id="wbTamper">
-            <span>(f) Kirim tanda tangan palsu (Simulasi Serangan)</span>
+            <span>(e) Kirim tanda tangan palsu (Simulasi Serangan)</span>
           </label>
 
           <button type="submit" id="btnSubmitWebhook" style="margin-top: 8px;">
@@ -701,7 +696,6 @@
       const level = document.getElementById('wbLevel').value;
       const message = document.getElementById('wbMessage').value;
       const secret = document.getElementById('wbSecret').value;
-      const chatId = document.getElementById('wbChatId').value.trim();
       const isTampered = document.getElementById('wbTamper').checked;
 
       const payloadObj = {
@@ -730,17 +724,12 @@
 
         addLog('INFO', `Mengirim POST /api/webhook dengan header x-signature...`);
 
-        const headers = {
-          'Content-Type': 'application/json',
-          'x-signature': signature
-        };
-        if (chatId) {
-          headers['x-telegram-chat-id'] = chatId;
-        }
-
         const response = await fetch('/api/webhook', {
           method: 'POST',
-          headers: headers,
+          headers: {
+            'Content-Type': 'application/json',
+            'x-signature': signature
+          },
           body: rawPayload
         });
 
