@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vercel & GitHub Actions Integration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.1);
+      --primary: #0070f3;
+      --accent: #50e3c2;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at 50% 0%, #172554 0%, var(--bg) 70%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .container {
+      max-width: 680px;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(16px);
+      padding: 48px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(80, 227, 194, 0.1);
+      border: 1px solid rgba(80, 227, 194, 0.3);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent);
+    }
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #ffffff 30%, #9ca3af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 1.05rem;
+      margin-bottom: 32px;
+    }
+    .pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+    .pipeline-step {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .arrow {
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge">
+      <div class="status-dot"></div>
+      Continuous Deployment Ready
+    </div>
+    <h1>GitHub Actions & Vercel</h1>
+    <p>Aplikasi berhasil dihubungkan dan siap di-deploy secara otomatis setiap kali ada event push ke branch main atau master.</p>
+    <div class="pipeline">
+      <span class="pipeline-step">Git Push</span>
+      <span class="arrow">➜</span>
+      <span class="pipeline-step">GitHub Actions</span>
+      <span class="arrow">➜</span>
+      <span class="pipeline-step">Vercel Production</span>
+    </div>
+  </div>
+</body>
+</html>
