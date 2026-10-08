@@ -739,11 +739,7 @@
           addLog('SUCCESS', `HTTP 200 OK: Validasi HMAC-SHA256 berhasil.`);
           
           if (resData.telegram && resData.telegram.status === 'sent') {
-            addLog('SUCCESS', `Telegram: Pesan berhasil dikirim ke bot (ID: ${resData.telegram.message_id})!`);
-          } else if (resData.telegram && resData.telegram.status === 'skipped') {
-            addLog('WARN', `Telegram: Pengiriman dilewati (${resData.telegram.message})`);
-          } else if (resData.telegram && resData.telegram.status === 'failed') {
-            addLog('DANGER', `Telegram: Gagal kirim bot (${resData.telegram.error})`);
+            addLog('SUCCESS', `Telegram: Pesan berhasil dikirim ke bot!`);
           }
 
           updateSecurityState(status === 'BAHAYA', `Laporan Webhook Diterima: ${message}`);
