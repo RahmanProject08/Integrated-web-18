@@ -36,3 +36,15 @@ jobs:
           INPUT_LEVEL: ${{ github.event.inputs.threat_level }}
           INPUT_DETAIL: ${{ github.event.inputs.detail_pesan }}
         run: python send_test_telegram.py
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Uji 3 Skenario Keamanan Webhook HMAC (Menggunakan secrets.HMAC_SECRET)
+        env:
+          HMAC_SECRET: ${{ secrets.HMAC_SECRET }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/test_flows.js
