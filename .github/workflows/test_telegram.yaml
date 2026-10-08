@@ -1,6 +1,10 @@
 name: Test Webhook and Telegram Notification
 
 on:
+  push:
+    branches:
+      - main
+      - master
   workflow_dispatch:
     inputs:
       status_kejadian:
