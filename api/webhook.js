@@ -105,7 +105,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       status: 'success',
       message: 'Validasi HMAC-SHA256 berhasil. Laporan diproses.',
-      telegram: telegramStatus,
+      telegram: telegramResult,
       data: req.body,
     });
   } catch (error) {
