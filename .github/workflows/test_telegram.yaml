@@ -1,74 +1,38 @@
-name: Test Webhook & Telegram Notification
+name: Test Webhook and Telegram Notification
 
 on:
   workflow_dispatch:
     inputs:
       status_kejadian:
-        description: 'Status Kejadian (AMAN / BAHAYA)'
+        description: "Status Kejadian (AMAN / BAHAYA)"
         required: true
-        default: 'BAHAYA'
+        default: "BAHAYA"
       threat_level:
-        description: 'Level Ancaman (LOW / MEDIUM / HIGH / CRITICAL)'
+        description: "Level Ancaman (LOW / MEDIUM / HIGH / CRITICAL)"
         required: true
-        default: 'HIGH'
+        default: "HIGH"
       detail_pesan:
-        description: 'Detail Pesan Ancaman'
+        description: "Detail Pesan Ancaman"
         required: true
-        default: 'Uji Coba Integrasi: Terdeteksi anomali trafik mencurigakan pada database'
+        default: "Uji Coba Integrasi: Terdeteksi anomali trafik mencurigakan pada database"
 
 jobs:
   test-telegram:
     runs-on: ubuntu-latest
     steps:
-      - name: Kirim Pesan Uji Coba ke Telegram
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Jalankan Script Pengiriman Telegram
         env:
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          INPUT_STATUS: ${{ github.event.inputs.status_kejadian || 'BAHAYA' }}
-          INPUT_LEVEL: ${{ github.event.inputs.threat_level || 'HIGH' }}
-          INPUT_DETAIL: ${{ github.event.inputs.detail_pesan || 'Uji Coba Integrasi: Terdeteksi anomali trafik mencurigakan pada database' }}
-        run: |
-          python3 - << 'EOF'
-          import os
-          import json
-          import urllib.request
-          import urllib.error
-
-          token = os.environ.get("TG_TOKEN")
-          chat_id = os.environ.get("TG_CHAT_ID")
-          status = os.environ.get("INPUT_STATUS", "BAHAYA").strip()
-          level = os.environ.get("INPUT_LEVEL", "HIGH").strip()
-          detail = os.environ.get("INPUT_DETAIL", "").strip()
-
-          icon = "🚨" if status.upper() == "BAHAYA" else "✅"
-          message = (
-              f"{icon} *NOTIFIKASI WEBHOOK SUPABASE*\n"
-              f"━━━━━━━━━━━━━━━━━━━━\n"
-              f"📌 *Status Kejadian* : *{status.upper()}*\n"
-              f"⚠️ *Level Ancaman*   : *{level.upper()}*\n"
-              f"📝 *Detail Pesan*    : {detail}\n"
-              f"━━━━━━━━━━━━━━━━━━━━\n"
-              f"🧪 *Uji Koneksi Telegram Berhasil*"
-          )
-
-          url = f"https://api.telegram.org/bot{token}/sendMessage"
-          payload = {
-              "chat_id": chat_id,
-              "text": message,
-              "parse_mode": "Markdown"
-          }
-
-          req = urllib.request.Request(
-              url,
-              data=json.dumps(payload).encode("utf-8"),
-              headers={"Content-Type": "application/json"}
-          )
-
-          try:
-              with urllib.request.urlopen(req) as resp:
-                  print("Pesan berhasil dikirim ke Telegram!")
-                  print(resp.read().decode("utf-8"))
-          except urllib.error.HTTPError as e:
-              print(f"Error mengirim Telegram: {e.code} - {e.read().decode('utf-8')}")
-              exit(1)
-          EOF
+          INPUT_STATUS: ${{ github.event.inputs.status_kejadian }}
+          INPUT_LEVEL: ${{ github.event.inputs.threat_level }}
+          INPUT_DETAIL: ${{ github.event.inputs.detail_pesan }}
+        run: python send_test_telegram.py
